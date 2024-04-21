@@ -11,12 +11,16 @@ from django.conf import settings
 
 from loguru import logger
 
-from bot.handlers import get_handlers_router
 from bot.core.loader import dp, bot
+from bot.middlewares import register_middlewares
+from bot.handlers import get_handlers_router
 
 
 async def on_startup() -> None:
     logger.info("Starting bot...")
+
+    # Register all middlewares
+    register_middlewares(dp)
 
     # Load all handlers
     dp.include_router(get_handlers_router())
