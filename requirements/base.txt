@@ -1,1 +1,2 @@
 django==5.0.4
+python-environ==0.4.54
