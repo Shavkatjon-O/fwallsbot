@@ -57,4 +57,4 @@ class Image(BaseModel):
     content_type = models.CharField(max_length=32)
 
     def __str__(self):
-        return self.file_id
+        return f"{self.file_id}"
