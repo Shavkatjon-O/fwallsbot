@@ -21,6 +21,8 @@ class ManageKeyboard:
 
 
 def get_manage_buttons() -> ReplyKeyboardMarkup:
+    """Return manage buttons."""
+
     buttons = {
         ManageKeyboard.ADMIN: command_admin,
     }
