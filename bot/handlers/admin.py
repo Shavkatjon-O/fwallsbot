@@ -86,3 +86,26 @@ async def select_admin_to_add(message: Message, state: FSMContext) -> None:
 
     await state.clear()
     await state.set_state(AdminStates.admin)
+
+
+@router.message(AdminStates.remove)
+async def select_admin_to_remove(message: Message, state: FSMContext) -> None:
+    shared_user_id = int(message.text.split(" - ")[0])
+
+    if message.from_user.id == shared_user_id:
+        await message.answer(text="🚫 Нельзя удалить самого себя")
+        return
+
+    try:
+        admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=shared_user_id)
+    except TelegramAdmin.DoesNotExist:
+        await message.answer(text="🚫 Админ не найден")
+        return
+
+    await sync_to_async(admin.delete)()
+    await message.answer(
+        text="✅ Админ удален", reply_markup=AdminKeyboard.get_keyboard()
+    )
+
+    await state.clear()
+    await state.set_state(AdminStates.admin)
