@@ -1,5 +1,6 @@
 from aiogram import Router, F
 from aiogram.filters import Command
+from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 from aiogram.types import Message, ContentType
 from aiogram.fsm.context import FSMContext
 
@@ -68,3 +69,10 @@ async def confirm_upload(message: Message, state: FSMContext) -> None:
 
     await state.update_data(media_group=media_group)
     await state.set_state(UploadStates.upload)
+
+
+@router.message(UploadStates.confirm, F.text == ConfirmKeyboard.replace)
+async def replace_image(message: Message, state: FSMContext) -> None:
+    text = "🔄 Пришлите новое изображение для замены"
+    await message.answer(text=text, reply_markup=ReplyKeyboardRemove())
+    await state.set_state(UploadStates.image)
