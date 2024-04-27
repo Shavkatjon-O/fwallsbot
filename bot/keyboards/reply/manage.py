@@ -5,12 +5,12 @@ from bot.handlers.admin import command_admin
 
 
 class ManageKeyboard:
-    ADMIN = "Администраторы 💎"
+    admin = "Админы 💎"
 
     @classmethod
     def get_keyboard(cls) -> ReplyKeyboardMarkup:
         buttons = [
-            [KeyboardButton(text=cls.ADMIN)],
+            [KeyboardButton(text=cls.admin)],
         ]
         keyboard = ReplyKeyboardBuilder(markup=buttons)
         keyboard.adjust(1)
@@ -24,6 +24,6 @@ def get_manage_buttons() -> ReplyKeyboardMarkup:
     """Return manage buttons."""
 
     buttons = {
-        ManageKeyboard.ADMIN: command_admin,
+        ManageKeyboard.admin: command_admin,
     }
     return buttons
