@@ -14,7 +14,7 @@ router = Router(name="manage")
 
 @router.message(Command("manage"), AdminFilter())
 async def command_manage(message: Message, state: FSMContext) -> None:
-    text = "🤖 Выберите действие:"
+    text = "🤖 Выберите действие"
     await message.answer(text=text, reply_markup=ManageKeyboard.get_keyboard())
     await state.set_state(ManageStates.manage)
 
