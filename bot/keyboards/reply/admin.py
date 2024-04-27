@@ -48,18 +48,3 @@ class AddAdminKeyboard:
         return keyboard.as_markup(
             resize_keyboard=True,
         )
-
-
-# def add_admin_keyboard() -> ReplyKeyboardMarkup:
-#     text = "📋 Выбрать админа"
-#     button = [
-#         KeyboardButton(
-#             text=text,
-#             request_user=KeyboardButtonRequestUser(
-#                 request_id=1,
-#                 user_is_bot=False,
-#             ),
-#         )
-#     ]
-#     markup = ReplyKeyboardMarkup(keyboard=[button], resize_keyboard=True)
-#     return markup
