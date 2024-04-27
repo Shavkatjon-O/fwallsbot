@@ -51,7 +51,7 @@ class ConfirmKeyboard:
             [KeyboardButton(text=cls.replace)],
         ]
         keyboard = ReplyKeyboardBuilder(markup=buttons)
-        keyboard.adjust(1)
+        keyboard.adjust(2)
 
         return keyboard.as_markup(
             resize_keyboard=True,
