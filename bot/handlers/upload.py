@@ -97,6 +97,23 @@ async def upload_all_images(message: Message, state: FSMContext) -> None:
     await state.set_state(UploadStates.language)
 
 
+@sync_to_async
+def save_images(media_group, language) -> None:
+    image_group = ImageGroup.objects.create(language=language)
+
+    images = []
+    for media in media_group:
+        file_id = media.photo[-1].file_id if media.photo else media.document.file_id
+        content_type = media.content_type
+
+        image = Image(
+            image_group=image_group, file_id=file_id, content_type=content_type
+        )
+        images.append(image)
+
+    Image.objects.bulk_create(images)
+
+
 @router.message(
     UploadStates.language,
     F.text.in_([LanguageKeyboard.russian, LanguageKeyboard.uzbek]),
@@ -107,28 +124,7 @@ async def finish_upload_image(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
     media_group = data.get("media_group", [])
 
-    images = []
-    image_group = await sync_to_async(ImageGroup.objects.create)(language=language)
-
-    for _message in media_group:
-        file_id = (
-            _message.photo[-1].file_id if _message.photo else _message.document.file_id
-        )
-        content_type = _message.content_type
-
-        image = Image(
-            image_group=image_group, file_id=file_id, content_type=content_type
-        )
-        images.append(image)
-
-    await sync_to_async(Image.objects.bulk_create)(images)
-
-    bot_info = await message.bot.get_me()
-
-    invite_link = "https://t.me/{}/?start={}"
-    invite_link = invite_link.format(bot_info.username, image_group.id)
-
-    await message.answer(text=invite_link)
+    await save_images(media_group, language)
 
     text = "✅ Изображения успешно загружены."
     await message.answer(text=text, reply_markup=UploadKeyboard.get_keyboard())
