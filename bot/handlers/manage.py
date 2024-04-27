@@ -19,7 +19,7 @@ async def command_manage(message: Message, state: FSMContext) -> None:
     await state.set_state(ManageStates.manage)
 
 
-@router.message(ManageStates.manage, F.text == ManageKeyboard.ADMIN)
+@router.message(ManageStates.manage, F.text.in_(get_manage_buttons().keys()))
 async def manage_buttons(message: Message, state: FSMContext) -> None:
     buttons = get_manage_buttons()
     await buttons[message.text](message, state)
