@@ -7,3 +7,4 @@ class ManageStates(StatesGroup):
 
 class AdminStates(StatesGroup):
     admin = State()
+    add = State()

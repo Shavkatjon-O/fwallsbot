@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, KeyboardButtonRequestUser
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 
@@ -22,3 +22,44 @@ class AdminKeyboard:
         return keyboard.as_markup(
             resize_keyboard=True,
         )
+
+
+class AddAdminKeyboard:
+    select = "📋 Выбрать админа"
+    back = "🔙 Назад"
+
+    @classmethod
+    def get_keyboard(cls) -> ReplyKeyboardMarkup:
+        buttons = [
+            [
+                KeyboardButton(
+                    text=cls.select,
+                    request_user=KeyboardButtonRequestUser(
+                        request_id=1,
+                        user_is_bot=False,
+                    ),
+                )
+            ],
+            [KeyboardButton(text=cls.back)],
+        ]
+        keyboard = ReplyKeyboardBuilder(markup=buttons)
+        keyboard.adjust(1)
+
+        return keyboard.as_markup(
+            resize_keyboard=True,
+        )
+
+
+# def add_admin_keyboard() -> ReplyKeyboardMarkup:
+#     text = "📋 Выбрать админа"
+#     button = [
+#         KeyboardButton(
+#             text=text,
+#             request_user=KeyboardButtonRequestUser(
+#                 request_id=1,
+#                 user_is_bot=False,
+#             ),
+#         )
+#     ]
+#     markup = ReplyKeyboardMarkup(keyboard=[button], resize_keyboard=True)
+#     return markup
