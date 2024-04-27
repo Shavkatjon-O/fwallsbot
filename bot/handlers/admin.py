@@ -27,6 +27,17 @@ async def command_admin(message: Message, state: FSMContext) -> None:
     await state.set_state(AdminStates.admin)
 
 
+@router.message(AdminStates.admin, F.text == AdminKeyboard.admins)
+async def show_admins(message: Message, state: FSMContext) -> None:
+    admins = await sync_to_async(TelegramAdmin.objects.all)()
+
+    text = "📋 Список админов:\n\n"
+    async for admin in admins:
+        text += f"👑 {admin.chat_id} - {admin.first_name} - {admin.username}\n"
+
+    await message.answer(text=text, reply_markup=AdminKeyboard.get_keyboard())
+
+
 @router.message(AdminStates.admin, F.text == AdminKeyboard.back)
 async def back_to_manage(message: Message, state: FSMContext) -> None:
     await state.clear()
