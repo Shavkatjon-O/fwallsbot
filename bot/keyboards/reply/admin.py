@@ -48,3 +48,19 @@ class AddAdminKeyboard:
         return keyboard.as_markup(
             resize_keyboard=True,
         )
+
+
+class RemoveAdminKeyboard:
+    back = "🔙 Назад"
+
+    @classmethod
+    def get_keyboard(cls) -> ReplyKeyboardMarkup:
+        buttons = [
+            [KeyboardButton(text=cls.back)],
+        ]
+        keyboard = ReplyKeyboardBuilder(markup=buttons)
+        keyboard.adjust(1)
+
+        return keyboard.as_markup(
+            resize_keyboard=True,
+        )

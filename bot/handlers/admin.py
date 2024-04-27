@@ -9,7 +9,11 @@ from bot.handlers.manage import command_manage
 from bot.models import TelegramAdmin
 
 from bot.states.admin import AdminStates
-from bot.keyboards.reply.admin import AdminKeyboard, AddAdminKeyboard
+from bot.keyboards.reply.admin import (
+    AdminKeyboard,
+    RemoveAdminKeyboard,
+    AddAdminKeyboard,
+)
 from bot.filters.admin import AdminFilter
 
 
@@ -31,9 +35,16 @@ async def back_to_manage(message: Message, state: FSMContext) -> None:
 
 @router.message(AdminStates.admin, F.text == AdminKeyboard.add)
 async def add_admin(message: Message, state: FSMContext) -> None:
-    text = "📋 Выберите действие"
+    text = "📋 Выберите админа для добавления"
     await message.answer(text=text, reply_markup=AddAdminKeyboard.get_keyboard())
     await state.set_state(AdminStates.add)
+
+
+@router.message(AdminStates.admin, F.text == AdminKeyboard.remove)
+async def remove_admin(message: Message, state: FSMContext) -> None:
+    text = "📋 Выберите админа для удаления"
+    await message.answer(text=text, reply_markup=RemoveAdminKeyboard.get_keyboard())
+    await state.set_state(AdminStates.remove)
 
 
 @router.message(AdminStates.add, F.text == AddAdminKeyboard.back)
