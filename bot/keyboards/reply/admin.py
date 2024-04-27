@@ -1,6 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, KeyboardButtonRequestUser
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
+from asgiref.sync import sync_to_async
+from bot.models import TelegramAdmin
+
 
 class AdminKeyboard:
     admins = "📋 Список админов"
@@ -54,8 +57,15 @@ class RemoveAdminKeyboard:
     back = "🔙 Назад"
 
     @classmethod
-    def get_keyboard(cls) -> ReplyKeyboardMarkup:
+    @sync_to_async
+    def aget_keyboard(cls) -> ReplyKeyboardMarkup:
+        admins = TelegramAdmin.objects.all()
+
         buttons = [
+            [KeyboardButton(text=f"{admin.chat_id} - {admin.first_name}")]
+            for admin in admins
+        ]
+        buttons += [
             [KeyboardButton(text=cls.back)],
         ]
         keyboard = ReplyKeyboardBuilder(markup=buttons)
