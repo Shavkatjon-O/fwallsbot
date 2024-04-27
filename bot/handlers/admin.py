@@ -3,7 +3,10 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from asgiref.sync import sync_to_async
+
 from bot.handlers.manage import command_manage
+from bot.models import TelegramAdmin
 
 from bot.states.admin import AdminStates
 from bot.keyboards.reply.admin import AdminKeyboard, AddAdminKeyboard
@@ -37,3 +40,31 @@ async def add_admin(message: Message, state: FSMContext) -> None:
 async def back_to_admin(message: Message, state: FSMContext) -> None:
     await state.clear()
     await command_admin(message, state)
+
+
+@router.message(AdminStates.add)
+async def select_admin(message: Message, state: FSMContext) -> None:
+    shared_user_id = message.user_shared.user_id
+
+    if message.from_user.id == shared_user_id:
+        await message.answer(text="🚫 Нельзя добавить самого себя")
+        return
+
+    try:
+        chat_info = await message.bot.get_chat(shared_user_id)
+    except Exception:
+        await message.answer(text="🚫 Не удалось получить информацию о пользователе")
+        return
+
+    admin, created = await sync_to_async(TelegramAdmin.objects.get_or_create)(
+        chat_id=chat_info.id,
+        username=chat_info.username,
+        first_name=chat_info.first_name,
+        last_name=chat_info.last_name,
+    )
+
+    text = "✅ Админ добавлен" if created else "🚫 Админ уже добавлен"
+    await message.answer(text=text, reply_markup=AdminKeyboard.get_keyboard())
+
+    await state.clear()
+    await state.set_state(AdminStates.admin)
