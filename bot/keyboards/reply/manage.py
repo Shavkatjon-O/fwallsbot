@@ -1,8 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from bot.handlers.admin import command_admin
-
 
 class ManageKeyboard:
     admin = "Админы 💎"
@@ -21,7 +19,7 @@ class ManageKeyboard:
 
 
 def get_manage_buttons() -> ReplyKeyboardMarkup:
-    """Return manage buttons."""
+    from bot.handlers.admin import command_admin
 
     buttons = {
         ManageKeyboard.admin: command_admin,

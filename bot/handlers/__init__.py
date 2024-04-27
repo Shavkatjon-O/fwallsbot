@@ -2,7 +2,7 @@ from aiogram import Router
 
 
 def get_handlers_router() -> Router:
-    from . import start, admin, manage
+    from . import start, manage, admin
 
     router = Router()
     router.include_router(start.router)
