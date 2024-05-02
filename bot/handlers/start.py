@@ -8,4 +8,4 @@ router = Router(name="start")
 
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
-    await message.answer(text="Hello, I'm a bot!")
+    await message.answer(text="Hello, I am bot !")
